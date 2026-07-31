@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>大六壬 · 排盘</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🪷</text></svg>" />
+    <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+    <div class="container">
+
+        <header class="header">
+            <h1>大六壬 <span>·</span> 排盘</h1>
+            <div>
+                <button class="btn btn-secondary" id="resetBtn">↺ 重置</button>
+            </div>
+        </header>
+
+        <!-- ===== 输入区 ===== -->
+        <div class="card">
+            <div class="card-title">📅 选择时间</div>
+            <div class="card-sub">选择问事日期和时间，或点击「现在」恢复当前时间。</div>
+            <div class="input-row">
+                <input type="datetime-local" id="datetimeInput" />
+                <button class="btn btn-secondary" id="nowBtn">📌 现在</button>
+                <button class="btn btn-primary" id="paiPanBtn">🪷 排盘</button>
+            </div>
+            <div id="loadingStatus" class="loading-tip">⏳ 正在加载排盘库...</div>
+        </div>
+
+        <!-- ===== 结果区 ===== -->
+        <div id="resultArea" class="hidden">
+
+            <div class="card">
+                <!-- ===== 课式信息 + 切换开关 ===== -->
+                <div class="flex-between">
+                    <div class="card-title">📋 课式信息</div>
+                    <div class="view-toggle">
+                        <button class="toggle-btn active" data-view="result" id="viewResultBtn">📊 课式结果</button>
+                        <button class="toggle-btn" data-view="guide" id="viewGuideBtn">📖 推导教程</button>
+                    </div>
+                </div>
+
+                <!-- 时间显示 -->
+                <span class="text-muted" id="displayDate" style="font-size:13px;display:block;margin-bottom:6px;"></span>
+
+                <!-- 课式结果（默认显示） -->
+                <div id="viewResultContent">
+                    <div style="display:flex;flex-wrap:wrap;gap:8px 24px;margin-top:4px;font-size:14px;">
+                        <span><span class="text-muted">八字：</span><span id="displayBazi">—</span></span>
+                        <span><span class="text-muted">月将：</span><span id="displayYueJiang">—</span></span>
+                        <span><span class="text-muted">空亡：</span><span id="displayKong">—</span></span>
+                        <span><span class="text-muted">课体：</span><span id="displayKeTi">—</span></span>
+                    </div>
+
+                    <div class="result-grid">
+                        <div class="result-box">
+                            <div class="label">🌐 天地盘</div>
+                            <div style="display:flex;gap:24px;flex-wrap:wrap;margin-top:4px;">
+                                <div>
+                                    <div class="text-muted" style="font-size:12px;">地盘</div>
+                                    <div style="font-size:16px;letter-spacing:2px;" id="displayDiPan">—</div>
+                                </div>
+                                <div>
+                                    <div class="text-muted" style="font-size:12px;">天盘</div>
+                                    <div style="font-size:16px;letter-spacing:2px;" id="displayTianPan">—</div>
+                                </div>
+                                <div>
+                                    <div class="text-muted" style="font-size:12px;">天将</div>
+                                    <div style="font-size:13px;letter-spacing:1px;" id="displayTianJiang">—</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="result-box">
+                            <div class="label">📖 四课</div>
+                            <div class="ke-grid" id="displaySiKe">
+                                <div class="ke-item"><span class="ke-label">一课</span><span id="ke1">—</span></div>
+                                <div class="ke-item"><span class="ke-label">二课</span><span id="ke2">—</span></div>
+                                <div class="ke-item"><span class="ke-label">三课</span><span id="ke3">—</span></div>
+                                <div class="ke-item"><span class="ke-label">四课</span><span id="ke4">—</span></div>
+                            </div>
+                        </div>
+
+                        <div class="result-box">
+                            <div class="label">⏳ 三传</div>
+                            <div class="chuan-flow" id="displaySanChuan">
+                                <div class="chuan-node">
+                                    <div class="chuan-name">初传</div>
+                                    <div class="chuan-value" id="chuChuan">—</div>
+                                </div>
+                                <span class="chuan-arrow">→</span>
+                                <div class="chuan-node">
+                                    <div class="chuan-name">中传</div>
+                                    <div class="chuan-value" id="zhongChuan">—</div>
+                                </div>
+                                <span class="chuan-arrow">→</span>
+                                <div class="chuan-node">
+                                    <div class="chuan-name">末传</div>
+                                    <div class="chuan-value" id="moChuan">—</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="result-box">
+                            <div class="label">⚡ 神煞（主要）</div>
+                            <div class="shensha-grid" id="displayShenSha">
+                                <span class="text-muted" style="font-size:13px;">—</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ===== 推导教程（默认隐藏） ===== -->
+                <div id="viewGuideContent" class="hidden">
+                    <div id="stepGuideContainer" style="font-size:14px;line-height:1.8;color:#e6edf3;">
+                        <p class="text-muted" style="padding:16px 0;">请先排盘生成推导教程。</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== 复制给 AI ===== -->
+            <div class="card">
+                <div class="flex-between">
+                    <div class="card-title">📋 复制给 AI</div>
+                    <span style="font-size:12px;color:#6a5f52;">格式可直接粘贴到 ChatGPT / Claude / DeepSeek</span>
+                </div>
+                <textarea id="outputText" readonly placeholder="点击「排盘」生成…"></textarea>
+
+                <div class="copy-area">
+                    <div class="copy-row">
+                        <button class="btn btn-primary" id="copyBtn">📋 复制</button>
+                    </div>
+                    <div class="platform-grid-inline" id="platformInline">
+                        <div class="hint">✅ 已复制！选择 AI 平台解读：</div>
+                        <button class="btn" data-platform="chatgpt">ChatGPT</button>
+                        <button class="btn" data-platform="deepseek">DeepSeek</button>
+                        <button class="btn" data-platform="gemini">Gemini</button>
+                        <button class="btn" data-platform="claude">Claude</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div style="text-align:center;padding:16px 0 6px;border-top:1px solid #30363d;margin-top:8px;font-size:12px;color:#5a4f42;">
+            🪷 大六壬排盘 · 基于 liuren-ts-lib · 数据仅用于参考
+        </div>
+    </div>
+
+    <!-- ===== Toast ===== -->
+    <div class="toast" id="toast"></div>
+
+    <script type="module" src="app.js"></script>
+</body>
+</html>
