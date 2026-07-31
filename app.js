@@ -129,15 +129,38 @@ function renderStepGuide(r) {
     const tianJiang = r.tianDiPan?.tianJiang || {};
     const ke = r.siKe || {};
     const sc = r.sanChuan || {};
+    const dunGan = r.dunGan || {};
+    const yinYangGuiRen = r.yinYangGuiRen || {};
+    const yangGuiRen = yinYangGuiRen.yangGuiRen || {};
+    const yinGuiRen = yinYangGuiRen.yinGuiRen || {};
 
-    // 获取日干日支（从八字中取）
     const bazi = d.bazi || '';
     const parts = bazi.split(' ');
     const riGan = parts.length >= 3 ? parts[2].charAt(0) : '?';
-    const riZhi = parts.length >= 3 ? parts[2].charAt(1) : '?';
-    const zhanShi = parts.length >= 4 ? parts[3].charAt(1) : '?';
+    const zhanShi = parts.length >= 4 ? (parts[3].charAt(1) || '?') : '?';
 
-    // 构造推导教程 HTML
+    const diPanStr = Object.values(diPan).join('、');
+    const tianPanStr = Object.values(tianPan).join('、');
+    const tianJiangStr = Object.values(tianJiang).join('、');
+
+    const yinGuiRenStr = Object.values(yinGuiRen).join('、');
+    const yangGuiRenStr = Object.values(yangGuiRen).join('、');
+
+    // 遁干：将对象转成有序字符串，按十二宫顺序显示
+    const diZhiOrder = ['子', '丑', '寅', '卯', '辰', '巳', '午', '未', '申', '酉', '戌', '亥'];
+    const dunGanStr = diZhiOrder.map(z => dunGan[z] || '空').join('、');
+
+    const ke1 = ke.ke1 ? ke.ke1.join(' ') : '—';
+    const ke2 = ke.ke2 ? ke.ke2.join(' ') : '—';
+    const ke3 = ke.ke3 ? ke.ke3.join(' ') : '—';
+    const ke4 = ke.ke4 ? ke.ke4.join(' ') : '—';
+
+    const fmt = (arr) => arr ? arr.join(' ') : '—';
+    const chu = fmt(sc.chuChuan);
+    const zhong = fmt(sc.zhongChuan);
+    const mo = fmt(sc.moChuan);
+    const keTi = sc.keTi || '—';
+
     let html = '<div class="step-guide">';
 
     // ---- 步骤1：定月将 ----
@@ -145,7 +168,7 @@ function renderStepGuide(r) {
         <div class="step-block">
             <div class="step-title">第一步：定月将</div>
             <div class="step-desc">
-                当前时间 <span class="value">${d.date || '—'}</span>，节气已过，月将为 <span class="highlight">${d.yuejiang || '—'}</span>。
+                当前时间 <span class="value">${d.date || '—'}</span>，月将为 <span class="highlight">${d.yuejiang || '—'}</span>。
             </div>
             <div class="step-result">
                 <span class="label">→ 月将 = </span>${d.yuejiang || '—'}
@@ -154,9 +177,6 @@ function renderStepGuide(r) {
     `;
 
     // ---- 步骤2：排天地盘 ----
-    const diPanStr = Object.values(diPan).join('、');
-    const tianPanStr = Object.values(tianPan).join('、');
-    const tianJiangStr = Object.values(tianJiang).join('、');
     html += `
         <div class="step-block">
             <div class="step-title">第二步：排天地盘</div>
@@ -171,14 +191,23 @@ function renderStepGuide(r) {
         </div>
     `;
 
-    // ---- 步骤3：起四课 ----
-    const ke1 = ke.ke1 ? ke.ke1.join(' ') : '—';
-    const ke2 = ke.ke2 ? ke.ke2.join(' ') : '—';
-    const ke3 = ke.ke3 ? ke.ke3.join(' ') : '—';
-    const ke4 = ke.ke4 ? ke.ke4.join(' ') : '—';
+    // ---- 步骤3：遁干（新增） ----
+    html += `
+        <div class="step-block" style="border-left-color:#f0883e;">
+            <div class="step-title" style="color:#f0883e;">第三步：遁干</div>
+            <div class="step-desc">
+                天干遁于十二地支，配入课式。
+            </div>
+            <div class="step-result">
+                <span class="label">→ 十二宫遁干：</span>${dunGanStr || '—'}
+            </div>
+        </div>
+    `;
+
+    // ---- 步骤4：起四课 ----
     html += `
         <div class="step-block">
-            <div class="step-title">第三步：起四课</div>
+            <div class="step-title">第四步：起四课</div>
             <div class="step-desc">
                 日干 <span class="highlight">${riGan}</span> 寄宫，逐课取天盘、天将。
             </div>
@@ -191,15 +220,10 @@ function renderStepGuide(r) {
         </div>
     `;
 
-    // ---- 步骤4：定三传 ----
-    const fmt = (arr) => arr ? arr.join(' ') : '—';
-    const chu = fmt(sc.chuChuan);
-    const zhong = fmt(sc.zhongChuan);
-    const mo = fmt(sc.moChuan);
-    const keTi = sc.keTi || '—';
+    // ---- 步骤5：定三传 ----
     html += `
         <div class="step-block">
-            <div class="step-title">第四步：定三传</div>
+            <div class="step-title">第五步：定三传</div>
             <div class="step-desc">
                 根据四课生克关系，定三传与课体。
             </div>
@@ -212,7 +236,21 @@ function renderStepGuide(r) {
         </div>
     `;
 
-    // ---- 步骤5：课式总览 ----
+    // ---- 步骤6：阴阳贵人（新增） ----
+    html += `
+        <div class="step-block" style="border-left-color:#f0883e;">
+            <div class="step-title" style="color:#f0883e;">第六步：阴阳贵人</div>
+            <div class="step-desc">
+                阳贵人、阴贵人天将分布。
+            </div>
+            <div class="step-result">
+                <span class="label">→ 阳贵人：</span>${yangGuiRenStr || '—'}<br />
+                <span class="label">→ 阴贵人：</span>${yinGuiRenStr || '—'}
+            </div>
+        </div>
+    `;
+
+    // ---- 步骤7：课式总览 ----
     html += `
         <div class="step-block" style="border-left-color:#f0883e;">
             <div class="step-title" style="color:#f0883e;">📋 课式总览</div>
