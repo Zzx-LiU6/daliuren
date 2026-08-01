@@ -409,22 +409,48 @@ textarea#outputText:focus {
     background: #21262d;
     margin: 16px 0;
 }
-/* ===== 移动端：天地盘 12 个字分两行显示 ===== */
+/* ===== 移动端优化：天地盘12字自适应 ===== */
 @media (max-width: 600px) {
-    .result-box .value {
-        display: grid;
-        grid-template-columns: repeat(6, 1fr);
-        gap: 4px 6px;
-        font-size: 15px;
-        font-weight: 400;
-        max-width: 340px;
-        margin: 4px auto 0;
-        text-align: center;
-    }
-    /* 天将如果字数多，可以单独调整 */
+    /* 天地盘三行文字自适应 */
+    #displayDiPan,
+    #displayTianPan,
     #displayTianJiang {
+        font-size: clamp(12px, 3.2vw, 18px) !important;
+        letter-spacing: 0px !important;
+        word-break: keep-all;
+        white-space: nowrap;
+        overflow: visible;
+        display: block;
+        text-align: center;
+        font-family: 'Noto Serif SC', 'Courier New', monospace;
+    }
+
+    /* 四课在移动端改为单列 */
+    .ke-grid {
+        grid-template-columns: 1fr;
+        gap: 4px 0;
+    }
+
+    /* 三传在移动端缩小间距 */
+    .chuan-flow {
+        gap: 6px;
+        justify-content: center;
+    }
+    .chuan-node {
+        padding: 4px 10px;
+    }
+    .chuan-node .chuan-value {
+        font-size: 15px;
+    }
+    .chuan-arrow {
+        font-size: 16px;
+    }
+
+    /* 神煞标签换行优化 */
+    .shensha-grid {
+        gap: 2px 10px;
+    }
+    .shensha-item {
         font-size: 12px;
-        grid-template-columns: repeat(6, 1fr);
-        gap: 2px 4px;
     }
 }
