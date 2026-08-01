@@ -83,9 +83,15 @@ function renderResult(r) {
     const diPan = r.tianDiPan?.diPan || {};
     const tianPan = r.tianDiPan?.tianPan || {};
     const tianJiang = r.tianDiPan?.tianJiang || {};
-    $('displayDiPan').textContent = Object.values(diPan).join(' ') || '—';
-    $('displayTianPan').textContent = Object.values(tianPan).join(' ') || '—';
-    $('displayTianJiang').textContent = Object.values(tianJiang).join(' ') || '—';
+
+    // 将对象值转为数组，并用 span 包裹每个元素
+    const diPanArr = Object.values(diPan);
+    const tianPanArr = Object.values(tianPan);
+    const tianJiangArr = Object.values(tianJiang);
+
+    $('displayDiPan').innerHTML = diPanArr.map(v => `<span>${v}</span>`).join('');
+    $('displayTianPan').innerHTML = tianPanArr.map(v => `<span>${v}</span>`).join('');
+    $('displayTianJiang').innerHTML = tianJiangArr.map(v => `<span>${v}</span>`).join('');
 
     const ke = r.siKe || {};
     $('ke1').textContent = ke.ke1 ? ke.ke1.join(' ') : '—';
