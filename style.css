@@ -409,3 +409,22 @@ textarea#outputText:focus {
     background: #21262d;
     margin: 16px 0;
 }
+/* ===== 移动端：天地盘 12 个字分两行显示 ===== */
+@media (max-width: 600px) {
+    .result-box .value {
+        display: grid;
+        grid-template-columns: repeat(6, 1fr);
+        gap: 4px 6px;
+        font-size: 15px;
+        font-weight: 400;
+        max-width: 340px;
+        margin: 4px auto 0;
+        text-align: center;
+    }
+    /* 天将如果字数多，可以单独调整 */
+    #displayTianJiang {
+        font-size: 12px;
+        grid-template-columns: repeat(6, 1fr);
+        gap: 2px 4px;
+    }
+}
