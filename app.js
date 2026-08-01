@@ -147,8 +147,9 @@ function renderStepGuide(r) {
     const yangGuiRenStr = Object.values(yangGuiRen).join('、');
 
     // 遁干：将对象转成有序字符串，按十二宫顺序显示
-    const diZhiOrder = ['子', '丑', '寅', '卯', '辰', '巳', '午', '未', '申', '酉', '戌', '亥'];
-    const dunGanStr = diZhiOrder.map(z => dunGan[z] || '空').join('、');
+    const diZhiOrder = ['zi', 'chou', 'yin', 'mao', 'chen', 'si', 'wu', 'wei', 'shen', 'you', 'xu', 'hai'];
+    const diZhiMap = { zi: '子', chou: '丑', yin: '寅', mao: '卯', chen: '辰', si: '巳', wu: '午', wei: '未', shen: '申', you: '酉', xu: '戌', hai: '亥' };
+    const dunGanStr = diZhiOrder.map(z => `${diZhiMap[z]}: ${dunGan[z] || '空'}`).join('、');
 
     const ke1 = ke.ke1 ? ke.ke1.join(' ') : '—';
     const ke2 = ke.ke2 ? ke.ke2.join(' ') : '—';
