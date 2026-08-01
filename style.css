@@ -409,48 +409,33 @@ textarea#outputText:focus {
     background: #21262d;
     margin: 16px 0;
 }
-/* ===== 移动端优化：天地盘12字自适应 ===== */
+/* ===== 天地盘通用样式 ===== */
+#displayDiPan,
+#displayTianPan,
+#displayTianJiang {
+    display: flex;
+    flex-wrap: nowrap;      /* PC 端一行显示 */
+    gap: 4px 6px;
+    font-size: 16px;
+    font-family: 'Noto Serif SC', monospace;
+    justify-content: center;
+    padding: 4px 0;
+}
+
+/* ===== 移动端改为两行各6个 ===== */
 @media (max-width: 600px) {
-    /* 天地盘三行文字自适应 */
     #displayDiPan,
     #displayTianPan,
     #displayTianJiang {
-        font-size: clamp(12px, 3.2vw, 18px) !important;
-        letter-spacing: 0px !important;
-        word-break: keep-all;
-        white-space: nowrap;
-        overflow: visible;
-        display: block;
-        text-align: center;
-        font-family: 'Noto Serif SC', 'Courier New', monospace;
+        flex-wrap: wrap !important;   /* 允许换行 */
+        gap: 4px 8px !important;      /* 行距4px，列距8px */
+        font-size: 14px !important;
     }
-
-    /* 四课在移动端改为单列 */
-    .ke-grid {
-        grid-template-columns: 1fr;
-        gap: 4px 0;
-    }
-
-    /* 三传在移动端缩小间距 */
-    .chuan-flow {
-        gap: 6px;
-        justify-content: center;
-    }
-    .chuan-node {
-        padding: 4px 10px;
-    }
-    .chuan-node .chuan-value {
-        font-size: 15px;
-    }
-    .chuan-arrow {
-        font-size: 16px;
-    }
-
-    /* 神煞标签换行优化 */
-    .shensha-grid {
-        gap: 2px 10px;
-    }
-    .shensha-item {
-        font-size: 12px;
+    #displayDiPan span,
+    #displayTianPan span,
+    #displayTianJiang span {
+        width: calc((100% - 8px * 5) / 6) !important; /* 每行6个，列距8px */
+        text-align: center !important;
+        flex-shrink: 0;
     }
 }
